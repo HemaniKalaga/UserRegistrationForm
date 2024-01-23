@@ -1,0 +1,19 @@
+{% extends 'dummy.html' %}
+
+{% block title %}
+    <title>Home page</title>
+{% endblock %}
+
+{% block body_block %}
+    <center>
+        {% if username %}
+        <h1><i><b>Welcome to the 1st Project of Hemani using Django</b></i></h1>
+        <h1><i><b><center>{{username}}</center></i></b></h1>
+            {% if username == 'SeethaRam' %}
+                <h1><b>Jai Shri Ram... Jai Seetha Ram</b></h1>
+            {% endif %}
+        {% else %}
+        <h1 margin="10px">Welcome to the 1st Project of Hemani using Django</h1>
+        {% endif %}
+    </center>
+{% endblock %}
