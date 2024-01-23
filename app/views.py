@@ -26,7 +26,7 @@ def registration(request):
                       'Congratulations! Your registration is successfull...Hurray!',
                       'kalagahemani1234@gmail.com',
                       [MUFDO.email],
-                      fail_silently=True)
+                      fail_silently=False)
             
             return HttpResponse('Registration is Successfull')
         else:
