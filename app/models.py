@@ -7,5 +7,4 @@ class Profile(models.Model):
     address=models.TextField()
     profile_pic=models.ImageField()
 
-    def __str__(self):
-        return self.username
+    
