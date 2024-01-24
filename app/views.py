@@ -3,8 +3,9 @@ from app.forms import *
 from app.models import *
 from django.http import HttpResponse,HttpResponseRedirect
 from django.core.mail import send_mail
-from django.contrib.auth import authenticate,login
+from django.contrib.auth import authenticate,login,logout
 from django.urls import reverse
+from django.contrib.auth.decorators import login_required
 
 # Create your views here.
 def registration(request):
@@ -18,7 +19,9 @@ def registration(request):
         if ufo.is_valid() and pfo.is_valid():
             MUFDO=ufo.save(commit=False)
             pw=ufo.cleaned_data['password']
+            e=ufo.cleaned_data['email']
             MUFDO.set_password(pw)
+            MUFDO.set_password(e)
             MUFDO.save()
 
             MPFDO=pfo.save(commit=False)
@@ -54,3 +57,18 @@ def user_login(request):
             request.session['username']=username
             return HttpResponseRedirect(reverse('home_page'))
     return render(request,'user_login.html')
+
+@login_required
+def user_logout(request):
+    logout(request)
+    return HttpResponseRedirect(reverse('home_page'))
+
+@login_required
+def profile_display(request):
+    un=request.session.get('username')
+    UO=User.objects.get(username=un)
+    PO=Profile.objects.get(username=UO)
+    d={'UO':UO,'PO':PO}
+    return render(request,'profile_display.html',d)
+
+
