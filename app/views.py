@@ -27,13 +27,6 @@ def registration(request):
             MPFDO=pfo.save(commit=False)
             MPFDO.username=MUFDO
             MPFDO.save()
-
-            send_mail('Registration',
-                      'Congratulations! Your registration is successfull...Hurray!',
-                      'kalagahemani1234@gmail.com',
-                      [MUFDO.email],
-                      fail_silently=False)
-            
             return HttpResponse('Registration is Successfull')
         else:
             return HttpResponse('Invalid')
@@ -49,14 +42,18 @@ def home_page(request):
 
 def user_login(request):
     if request.method=='POST':
-        username=request.POST['un']
-        password=request.POST['pw']
+        username=request.POST['username']
+        password=request.POST['password']
+        
         AUO=authenticate(username=username,password=password)
         if AUO and AUO.is_active:
             login(request,AUO)
             request.session['username']=username
             return HttpResponseRedirect(reverse('home_page'))
-    return render(request,'user_login.html')
+        else:
+            return HttpResponse('Invalid username/password')
+    else:
+        return render(request,'user_login.html')
 
 @login_required
 def user_logout(request):
@@ -70,5 +67,39 @@ def profile_display(request):
     PO=Profile.objects.get(username=UO)
     d={'UO':UO,'PO':PO}
     return render(request,'profile_display.html',d)
+
+@login_required
+def change_password(request):
+    if request.method=='POST':
+        password=request.POST['pw']
+        username=request.session.get('username')
+        UO=User.objects.get(username=username)
+        UO.set_password(password)
+        UO.save()
+        return HttpResponse('Password is changed successfully')
+    else:
+        return render(request,'change_password.html')
+        
+
+
+
+
+
+
+
+        
+    
+def otp(request):
+    if request.method=="POST":
+        if request.POST[otp]==9766:
+            email=request.session['email']
+            send_mail('Login Successful',
+                      'Your login is successful',
+                      'kalagahemani1234@gmail.com',
+                      [email],
+                      fail_silently=False)
+            username=request.session['username']
+            password=request.session['password']
+            return HttpResponseRedirect(reverse(home_page))
 
 
